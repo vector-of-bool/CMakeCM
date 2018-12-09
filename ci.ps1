@@ -30,7 +30,8 @@ Check-ExitCode
 
 $ctest = Join-Path (Split-Path $cmake) ctest
 
-& $cmake -E chdir $bin_dir $ctest -j4
+& $cmake -E chdir $bin_dir $ctest -j4 --output-on-failure
+Check-ExitCode
 
 # & $cmake --build-and-test `
 #     $source_dir `

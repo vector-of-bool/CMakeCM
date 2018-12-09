@@ -15,7 +15,8 @@ jobs:
           powershell ./ci.ps1 -ForceMSVC
         displayName: Run tests
 
-  - job: MinGW
+  - job: Windows_MinGW
+    displayName: MinGW on Windows
     pool:
       vmImage: vs2017-win2016
     steps:

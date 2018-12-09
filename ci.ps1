@@ -31,7 +31,18 @@ Check-ExitCode
 $ctest = Join-Path (Split-Path $cmake) ctest
 
 & $cmake -E chdir $bin_dir $ctest -j4 --output-on-failure
-Check-ExitCode
+$retc = $LASTEXITCODE
+$cmake_logs = Get-ChildItem $bin_dir -Recurse -Include "CMakeError.log"
+if ($retc -ne 0) {
+    foreach ($item in $cmake_logs) {
+        Write-Host "=========================="
+        Write-Host "Contents of file:" $item.FullName
+        Write-Host "VVVVVVVVVVVVVVVVVVVVVVVVVV"
+        Get-Content $item | Write-Host
+        Write-Host "^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    }
+    throw "CTest execution failed [$retc]"
+}
 
 # & $cmake --build-and-test `
 #     $source_dir `

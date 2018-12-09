@@ -1,4 +1,8 @@
-param()
+param(
+    # Force using MSVC
+    [switch]
+    $ForceMSVC
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -11,6 +15,11 @@ function Check-ExitCode {
     if ($LASTEXITCODE) {
         throw "Command failed [$LASTEXITCODE]"
     }
+}
+
+if ($ForceMSVC) {
+    $env:CC = "cl"
+    $env:CXX = "cl"
 }
 
 & $cmake -GNinja "-H$source_dir" "-B$bin_dir"

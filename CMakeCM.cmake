@@ -70,6 +70,8 @@ macro(_cmcm_include_module name remote local version also)
     include("${__resolved}")
 endmacro()
 
+list(APPEND CMAKE_MODULE_PATH "${CMCM_MODULE_DIR}")
+
 cmcm_module(FindFilesystem.cmake
     LOCAL modules/FindFilesystem.cmake
     VERSION 1

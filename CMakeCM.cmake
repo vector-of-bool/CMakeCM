@@ -7,8 +7,10 @@ macro(_cmcm_set_if_undef varname)
     set("${varname}" "${__default}" CACHE STRING "" FORCE)
 endmacro()
 
-_cmcm_set_if_undef(CMCM_LOCAL_RESOLVE_URL "http://example.com")
-_cmcm_set_if_undef(CMCM_MODULE_DIR "cmcm-modules")
+# This is the base URL to resolve `LOCAL` modules
+_cmcm_set_if_undef(CMCM_LOCAL_RESOLVE_URL "https://vector-of-bool.github.io/CMakeCM")
+# This is the directory where CMakeCM will store its downloaded modules
+_cmcm_set_if_undef(CMCM_MODULE_DIR "${CMAKE_BINARY_DIR}/_cmcm-modules")
 
 function(cmcm_module name)
     set(options)

@@ -70,7 +70,7 @@ macro(_cmcm_include_module name remote local version also)
     include("${__resolved}")
 endmacro()
 
-list(APPEND CMAKE_MODULE_PATH "${CMCM_MODULE_DIR}")
+list(INSERT CMAKE_MODULE_PATH 0 "${CMCM_MODULE_DIR}")
 
 cmcm_module(FindFilesystem.cmake
     LOCAL modules/FindFilesystem.cmake
@@ -79,5 +79,10 @@ cmcm_module(FindFilesystem.cmake
 
 cmcm_module(CMakeRC.cmake
     REMOTE https://raw.githubusercontent.com/vector-of-bool/cmrc/966a1a717715f4e57fb1de00f589dea1001b5ae6/CMakeRC.cmake
+    VERSION 1
+    )
+
+cmcm_module(FindBikeshed.cmake
+    LOCAL modules/FindBikeshed.cmake
     VERSION 1
     )

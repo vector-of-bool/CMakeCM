@@ -20,5 +20,6 @@ function(cmcm_add_test_project name)
   set_property(TEST ${name} PROPERTY ENVIRONMENT CXX=${CMAKE_CXX_COMPILER} CC=${CMAKE_C_COMPILER})
 endfunction()
 
+add_subdirectory(FindBikeshed)
 add_subdirectory(FindFilesystem)
 add_subdirectory(CMakeRC)

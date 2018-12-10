@@ -10,7 +10,7 @@ jobs:
     steps:
       - script: choco install ninja
         displayName: Install Ninja
-      - script: python2 -m pip install virtualenv
+      - script: C:\\Python27amd64\\python -m pip install virtualenv
         displayName: Install virtualenv
       - script: >
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 &&
@@ -24,7 +24,7 @@ jobs:
     steps:
       - script: choco install ninja
         displayName: Install Ninja
-      - script: python2 -m pip install virtualenv
+      - script: C:\\Python27amd64\\python -m pip install virtualenv
         displayName: Install virtualenv
       - script: >
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 &&
@@ -50,10 +50,11 @@ jobs:
       vmImage: macos-10.13
     steps:
       - script: |
+          set -eu
           curl -Ls https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip -o ninja-mac.zip
           unzip ninja-mac.zip
           sudo cp -v ninja /usr/local/bin/
-          sudo python2 -m pip install virtualenv
+          sudo python -m pip install virtualenv
         displayName: Prepare System
       - script: pwsh ./ci.ps1
         displayName: Run tests

@@ -1,7 +1,16 @@
 param(
     # Force using MSVC
     [switch]
-    $ForceMSVC
+    $ForceMSVC,
+    # Hide the CMakeError logs
+    [switch]
+    $NoCMakeErrorLogs,
+    # Remove the build directory
+    [switch]
+    $Clean,
+    # Tests which should not be run
+    [string[]]
+    $DisableTests
 )
 
 $ErrorActionPreference = "Stop"
@@ -10,6 +19,11 @@ $cmake = (Get-Command cmake).Source
 
 $source_dir = $PSScriptRoot
 $bin_dir = Join-Path $source_dir ci-build
+
+if ($Clean -and (Test-Path $bin_dir)) {
+    Write-Host "Removing old directory $bin_dir"
+    Remove-Item $bin_dir -Recurse -Force
+}
 
 function Check-ExitCode {
     if ($LASTEXITCODE) {
@@ -22,7 +36,7 @@ if ($ForceMSVC) {
     $env:CXX = "cl"
 }
 
-& $cmake -GNinja "-H$source_dir" "-B$bin_dir"
+& $cmake -GNinja "-H$source_dir" "-B$bin_dir" "-DDISABLE_TESTS=$($DisableTests -join ';')"
 Check-ExitCode
 
 & $cmake --build $bin_dir
@@ -34,12 +48,14 @@ $ctest = Join-Path (Split-Path $cmake) ctest
 $retc = $LASTEXITCODE
 $cmake_logs = Get-ChildItem $bin_dir -Recurse -Include "CMakeError.log"
 if ($retc -ne 0) {
-    foreach ($item in $cmake_logs) {
-        Write-Host "=========================="
-        Write-Host "Contents of file:" $item.FullName
-        Write-Host "VVVVVVVVVVVVVVVVVVVVVVVVVV"
-        Get-Content $item | Write-Host
-        Write-Host "^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    if (! $NoCMakeErrorLogs) {
+        foreach ($item in $cmake_logs) {
+            Write-Host "=========================="
+            Write-Host "Contents of file:" $item.FullName
+            Write-Host "VVVVVVVVVVVVVVVVVVVVVVVVVV"
+            Get-Content $item | Write-Host
+            Write-Host "^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        }
     }
     throw "CTest execution failed [$retc]"
 }

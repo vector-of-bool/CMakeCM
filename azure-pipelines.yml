@@ -10,6 +10,8 @@ jobs:
     steps:
       - script: choco install ninja
         displayName: Install Ninja
+      - script: pip2 install virtualenv
+        displayName: Install virtualenv
       - script: >
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 &&
           powershell ./ci.ps1 -ForceMSVC
@@ -22,6 +24,8 @@ jobs:
     steps:
       - script: choco install ninja
         displayName: Install Ninja
+      - script: pip2 install virtualenv
+        displayName: Install virtualenv
       - script: >
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 &&
           powershell ./ci.ps1
@@ -36,6 +40,7 @@ jobs:
           curl -Ls https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip -o ninja-linux.zip
           unzip ninja-linux.zip
           sudo cp -v ninja /usr/local/bin/
+          sudo pip2 install virtualenv
         displayName: Prepare System
       - script: pwsh ./ci.ps1
         displayName: Run tests
@@ -48,6 +53,7 @@ jobs:
           curl -Ls https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip -o ninja-mac.zip
           unzip ninja-mac.zip
           sudo cp -v ninja /usr/local/bin/
+          sudo pip2 install virtualenv
         displayName: Prepare System
       - script: pwsh ./ci.ps1
         displayName: Run tests

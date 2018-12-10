@@ -20,6 +20,12 @@ function(cmcm_add_test_project name)
   set_property(TEST ${name} PROPERTY ENVIRONMENT CXX=${CMAKE_CXX_COMPILER} CC=${CMAKE_C_COMPILER})
 endfunction()
 
-add_subdirectory(FindBikeshed)
-add_subdirectory(FindFilesystem)
-add_subdirectory(CMakeRC)
+foreach(testdir
+        FindBikeshed
+        FindFilesystem
+        CMakeRC
+        )
+    if(NOT testdir IN_LIST DISABLE_TESTS)
+        add_subdirectory(${testdir})
+    endif()
+endforeach()

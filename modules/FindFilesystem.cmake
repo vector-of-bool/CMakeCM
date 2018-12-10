@@ -180,7 +180,7 @@ if(CXX_FILESYSTEM_HAVE_FS)
 
         int main() {
             auto cwd = @CXX_FILESYSTEM_NAMESPACE@::current_path();
-            return cwd.string().size();
+            return static_cast<int>(cwd.string().size());
         }
     ]] code @ONLY)
 

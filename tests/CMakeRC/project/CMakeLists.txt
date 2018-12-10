@@ -8,4 +8,4 @@ include(CMakeRC)
 cmrc_add_resource_library(dummy CMakeLists.txt)
 
 add_executable(dummy-user main.cpp)
-target_link_directories(dummy-user PRIVATE dummy)
+target_link_libraries(dummy-user PRIVATE dummy)

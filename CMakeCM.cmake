@@ -86,6 +86,11 @@ cmcm_module(FindBikeshed.cmake
     LOCAL modules/FindBikeshed.cmake
     VERSION 2
     )
+    
+cmcm_module(cotire.cmake
+    REMOTE https://github.com/sakra/cotire/releases/download/cotire-1.8.0/cotire.cmake
+    VERSION 1.8.0
+    )
 
 cmcm_module(C++Concepts.cmake
     LOCAL modules/C++Concepts.cmake

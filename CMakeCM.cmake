@@ -91,3 +91,11 @@ cmcm_module(C++Concepts.cmake
     LOCAL modules/C++Concepts.cmake
     VERSION 1
     )
+
+cmcm_module(IndirectCall.cmake
+    LOCAL modules/IndirectCall.cmake
+    VERSION 1)
+
+cmcm_module(ExternalDependency.cmake
+    LOCAL modules/ExternalDependency.cmake
+    VERSION 1)

@@ -86,3 +86,8 @@ cmcm_module(FindBikeshed.cmake
     LOCAL modules/FindBikeshed.cmake
     VERSION 1
     )
+
+cmcm_module(C++Concepts.cmake
+    LOCAL modules/C++Concepts.cmake
+    VERSION 1
+    )

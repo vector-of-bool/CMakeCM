@@ -4,9 +4,14 @@ set(_indirect_call_file "${CMAKE_BINARY_DIR}/_indirect_call.cmake" CACHE INTERNA
 #
 # Usage:
 # indirect_call("${function_name}" args)
-macro(indirect_call NAME)
-  set(_indirect_call_argn "${ARGN}")
-  list(JOIN _indirect_call_argn "\" \"" _indirect_call_args)
-  file(WRITE "${_indirect_call_file}" "${NAME}(\"${_indirect_call_args}\")")
+function(indirect_call NAME)
+  set(args)
+  set(index 1)
+  while(index LESS ARGC)
+    set(args "${args} \"${ARGV${index}}\"")
+    math(EXPR index "${index}+1")
+  endwhile()
+
+  file(WRITE "${_indirect_call_file}" "${NAME}(${args})")
   include("${_indirect_call_file}")
-endmacro()
+endfunction()

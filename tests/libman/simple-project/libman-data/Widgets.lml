@@ -1,0 +1,4 @@
+Type: Library
+Name: Widgets
+
+Include-Path: widgets-include

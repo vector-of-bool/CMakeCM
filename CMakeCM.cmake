@@ -91,3 +91,8 @@ cmcm_module(C++Concepts.cmake
     LOCAL modules/C++Concepts.cmake
     VERSION 1
     )
+
+cmcm_module(libman.cmake
+    REMOTE https://github.com/vector-of-bool/libman/raw/85c5d23e700a9ed6b428aa78cfa556f60b925477/cmake/libman.cmake
+    VERSION 1
+    )

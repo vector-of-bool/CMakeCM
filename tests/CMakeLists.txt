@@ -24,6 +24,7 @@ foreach(testdir
         FindBikeshed
         FindFilesystem
         CMakeRC
+        libman
         )
     if(NOT testdir IN_LIST DISABLE_TESTS)
         add_subdirectory(${testdir})

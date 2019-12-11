@@ -1,0 +1,5 @@
+Type: Package
+Name: Widgets
+Namespace: ACME
+
+Library: Widgets.lml

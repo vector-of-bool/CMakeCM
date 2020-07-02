@@ -74,7 +74,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMCM_MODULE_DIR}")
 
 cmcm_module(FindFilesystem.cmake
     LOCAL modules/FindFilesystem.cmake
-    VERSION 1
+    VERSION 2
     )
 
 cmcm_module(CMakeRC.cmake
@@ -84,7 +84,7 @@ cmcm_module(CMakeRC.cmake
 
 cmcm_module(FindBikeshed.cmake
     LOCAL modules/FindBikeshed.cmake
-    VERSION 1
+    VERSION 2
     )
 
 cmcm_module(C++Concepts.cmake

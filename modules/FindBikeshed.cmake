@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(Python2 COMPONENTS Interpreter)
+find_package(Python3 COMPONENTS Interpreter)
+find_package(Python2 COMPONENTS Interpreter)
 
 macro(_fail_find reason)
     set(Bikeshed_FOUND FALSE CACHE BOOL "Was Bikeshed found?" FORCE)
@@ -12,20 +13,23 @@ macro(_fail_find reason)
     return()
 endmacro()
 
-if(NOT Python2_FOUND)
-    _fail_find("Failed to find bikeshed: We require a Python 2 executable.")
+if(Python3_FOUND)
+    get_target_property(py_exe Python3::Interpreter LOCATION)
+elseif(Python2_FOUND)
+    get_target_property(py_exe Python2::Interpreter LOCATION)
+else()
+    _fail_find("Failed to find bikeshed: We require a Python 2 or Python 3 executable.")
 endif()
-
-get_target_property(py2 Python2::Interpreter LOCATION)
 
 if(NOT DEFINED PF_VIRTUALENV_MODULE)
     message(STATUS "Finding Python virtualenv module...")
 endif()
+
 if(NOT PF_VIRTUALENV_MODULE)
     set(found)
     foreach(try_mod IN ITEMS venv virtualenv NOTFOUND)
         execute_process(
-            COMMAND "${py2}" -m "${try_mod}" --help
+            COMMAND "${py_exe}" -m "${try_mod}" --help
             OUTPUT_VARIABLE out
             ERROR_VARIABLE out
             RESULT_VARIABLE retc
@@ -40,12 +44,12 @@ if(NOT PF_VIRTUALENV_MODULE)
         # We've found the mod after failing to find it. Clear the cached failure.
         unset(PF_VIRTUALENV_MODULE CACHE)
     endif()
-    set(PF_VIRTUALENV_MODULE "${found}" CACHE STRING "Python 2 module containing virtualenv")
+    set(PF_VIRTUALENV_MODULE "${found}" CACHE STRING "Python module containing virtualenv")
 endif()
 
 if(NOT PF_VIRTUALENV_MODULE)
     message(STATUS "${PF_VIRTUALENV_MODULE}")
-    _fail_find("Failed to find Bikeshed: Python 2 installation must contain virtualenv")
+    _fail_find("Failed to find Bikeshed: Python installation must contain virtualenv")
 endif()
 
 get_filename_component(bs_venv_dir "${CMAKE_BINARY_DIR}/_bikeshed_venv" ABSOLUTE)
@@ -97,7 +101,7 @@ file(REMOVE_RECURSE "${bs_venv_dir}")
 
 message(STATUS "Creating virtualenv for Bikeshed...")
 execute_process(
-    COMMAND "${py2}" -m "${PF_VIRTUALENV_MODULE}" "${bs_venv_dir}"
+    COMMAND "${py_exe}" -m "${PF_VIRTUALENV_MODULE}" "${bs_venv_dir}"
     OUTPUT_VARIABLE out
     ERROR_VARIABLE out
     RESULT_VARIABLE retc
@@ -108,19 +112,19 @@ if(retc)
     _fail_find("Could not create virtualenv")
 endif()
 
-get_filename_component(py_filename "${py2}" NAME)
-find_program(_venv_py2
-    NAMES ${py_filename} python2.7 python2 python
+get_filename_component(py_filename "${py_exe}" NAME)
+find_program(_venv_py_exe
+    NAMES ${py_filename} python python3 python2.7 python2
     PATH_SUFFIXES Scripts bin
     NO_DEFAULT_PATH
     PATHS "${bs_venv_dir}"
     )
-set(venv_py2 "${_venv_py2}")
-unset(_venv_py2 CACHE)
+set(venv_py_exe "${_venv_py_exe}")
+unset(_venv_py_exe CACHE)
 
 message(STATUS "Installing Bikeshed in local virtualenv")
 execute_process(
-    COMMAND "${venv_py2}" -m pip install --editable "${bikeshed_SOURCE_DIR}"
+    COMMAND "${venv_py_exe}" -m pip install --editable "${bikeshed_SOURCE_DIR}"
     OUTPUT_VARIABLE out
     ERROR_VARIABLE out
     RESULT_VARIABLE retc

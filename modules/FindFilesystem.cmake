@@ -106,7 +106,7 @@ cmake_minimum_required(VERSION 3.10)
 
 include(CMakePushCheckState)
 include(CheckIncludeFileCXX)
-include(CheckCXXSourceCompiles)
+include(CheckCXXSourceRuns)
 
 cmake_push_check_state()
 
@@ -181,16 +181,18 @@ set(_found FALSE)
 if(CXX_FILESYSTEM_HAVE_FS)
     # We have some filesystem library available. Do link checks
     string(CONFIGURE [[
+        #include <cstdlib>
         #include <@CXX_FILESYSTEM_HEADER@>
 
         int main() {
             auto cwd = @CXX_FILESYSTEM_NAMESPACE@::current_path();
-            return static_cast<int>(cwd.string().size());
+            printf("%s", cwd.c_str());
+            return EXIT_SUCCESS;
         }
     ]] code @ONLY)
 
-    # Try to compile a simple filesystem program without any linker flags
-    check_cxx_source_compiles("${code}" CXX_FILESYSTEM_NO_LINK_NEEDED)
+    # Try to run a simple filesystem program without any linker flags
+    check_cxx_source_runs("${code}" CXX_FILESYSTEM_NO_LINK_NEEDED)
 
     set(can_link ${CXX_FILESYSTEM_NO_LINK_NEEDED})
 
@@ -198,12 +200,12 @@ if(CXX_FILESYSTEM_HAVE_FS)
         set(prev_libraries ${CMAKE_REQUIRED_LIBRARIES})
         # Add the libstdc++ flag
         set(CMAKE_REQUIRED_LIBRARIES ${prev_libraries} -lstdc++fs)
-        check_cxx_source_compiles("${code}" CXX_FILESYSTEM_STDCPPFS_NEEDED)
+        check_cxx_source_runs("${code}" CXX_FILESYSTEM_STDCPPFS_NEEDED)
         set(can_link ${CXX_FILESYSTEM_STDCPPFS_NEEDED})
         if(NOT CXX_FILESYSTEM_STDCPPFS_NEEDED)
             # Try the libc++ flag
             set(CMAKE_REQUIRED_LIBRARIES ${prev_libraries} -lc++fs)
-            check_cxx_source_compiles("${code}" CXX_FILESYSTEM_CPPFS_NEEDED)
+            check_cxx_source_runs("${code}" CXX_FILESYSTEM_CPPFS_NEEDED)
             set(can_link ${CXX_FILESYSTEM_CPPFS_NEEDED})
         endif()
     endif()
@@ -225,8 +227,8 @@ endif()
 
 cmake_pop_check_state()
 
-set(Filesystem_FOUND ${_found} CACHE BOOL "TRUE if we can compile and link a program using std::filesystem" FORCE)
+set(Filesystem_FOUND ${_found} CACHE BOOL "TRUE if we can run a program using std::filesystem" FORCE)
 
 if(Filesystem_FIND_REQUIRED AND NOT Filesystem_FOUND)
-    message(FATAL_ERROR "Cannot Compile simple program using std::filesystem")
+    message(FATAL_ERROR "Cannot run simple program using std::filesystem")
 endif()

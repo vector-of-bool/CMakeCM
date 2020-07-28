@@ -116,7 +116,7 @@ if(CMAKE_CROSSCOMPILING)
     endmacro()
 else()
     include(CheckCXXSourceRuns)
-    macro(check_cxx_source code var)
+    macro(_cmcm_check_cxx_source code var)
         check_cxx_source_runs("${code}" ${var})
     endmacro()
 endif()
@@ -205,7 +205,7 @@ if(CXX_FILESYSTEM_HAVE_FS)
     ]] code @ONLY)
 
     # Check a simple filesystem program without any linker flags
-    check_cxx_source("${code}" CXX_FILESYSTEM_NO_LINK_NEEDED)
+    _cmcm_check_cxx_source("${code}" CXX_FILESYSTEM_NO_LINK_NEEDED)
 
     set(can_link ${CXX_FILESYSTEM_NO_LINK_NEEDED})
 
@@ -213,12 +213,12 @@ if(CXX_FILESYSTEM_HAVE_FS)
         set(prev_libraries ${CMAKE_REQUIRED_LIBRARIES})
         # Add the libstdc++ flag
         set(CMAKE_REQUIRED_LIBRARIES ${prev_libraries} -lstdc++fs)
-        check_cxx_source("${code}" CXX_FILESYSTEM_STDCPPFS_NEEDED)
+        _cmcm_check_cxx_source("${code}" CXX_FILESYSTEM_STDCPPFS_NEEDED)
         set(can_link ${CXX_FILESYSTEM_STDCPPFS_NEEDED})
         if(NOT CXX_FILESYSTEM_STDCPPFS_NEEDED)
             # Try the libc++ flag
             set(CMAKE_REQUIRED_LIBRARIES ${prev_libraries} -lc++fs)
-            check_cxx_source("${code}" CXX_FILESYSTEM_CPPFS_NEEDED)
+            _cmcm_check_cxx_source("${code}" CXX_FILESYSTEM_CPPFS_NEEDED)
             set(can_link ${CXX_FILESYSTEM_CPPFS_NEEDED})
         endif()
     endif()

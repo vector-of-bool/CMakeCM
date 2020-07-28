@@ -111,7 +111,7 @@ include(CheckIncludeFileCXX)
 # Otherwise, assume that compile + link is a sufficient check.
 if(CMAKE_CROSSCOMPILING)
     include(CheckCXXSourceCompiles)
-    macro(check_cxx_source code var)
+    macro(_cmcm_check_cxx_source code var)
         check_cxx_source_compiles("${code}" ${var})
     endmacro()
 else()
